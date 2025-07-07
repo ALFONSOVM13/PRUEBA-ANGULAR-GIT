@@ -1,0 +1,88 @@
+<app-post-header></app-post-header>
+
+<div class="container mx-auto px-4 py-4">
+  <div class="card bg-white shadow-lg rounded-lg max-w-2xl mx-auto p-6">
+    <div class="border-b pb-4 mb-6">
+      <div class="flex items-center gap-1">
+        <app-button
+          variant="ghost"
+          (buttonClick)="onBack()"
+          class="hover:bg-gray-100 m-2 transition-colors duration-200"
+        >
+          <fa-icon [icon]="faArrowLeft"></fa-icon>
+        </app-button>
+        <h2 class="text-2xl font-bold text-gray-800">
+          {{ isEditing ? 'Post Details' : 'New Post' }}
+        </h2>
+      </div>
+      <p class="text-gray-600 mt-1">Complete the fields to {{ isEditing ? 'update' : 'create' }} the post</p>
+    </div>
+
+    <form [formGroup]="postForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1" for="userId">User ID</label>
+        <input
+          id="userId"
+          type="number"
+          class="w-full px-3 py-2 border rounded-md shadow-sm focus:ring-primary focus:border-primary"
+          formControlName="userId"
+          [class.border-red-500]="postForm.get('userId')?.errors && postForm.get('userId')?.touched"
+        >
+        <div class="mt-1 text-sm text-red-600" *ngIf="postForm.get('userId')?.errors?.['required'] && postForm.get('userId')?.touched">
+          ID is required
+        </div>
+        <div class="mt-1 text-sm text-red-600" *ngIf="postForm.get('userId')?.errors?.['min'] && postForm.get('userId')?.touched">
+          ID must be greater than 0
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1" for="title">Title</label>
+        <input
+          id="title"
+          type="text"
+          class="w-full px-3 py-2 border rounded-md shadow-sm focus:ring-primary focus:border-primary"
+          formControlName="title"
+          [class.border-red-500]="postForm.get('title')?.errors && postForm.get('title')?.touched"
+        >
+        <div class="mt-1 text-sm text-red-600" *ngIf="postForm.get('title')?.errors?.['required'] && postForm.get('title')?.touched">
+          Title is required
+        </div>
+        <div class="mt-1 text-sm text-red-600" *ngIf="postForm.get('title')?.errors?.['minlength'] && postForm.get('title')?.touched">
+          The title must be at least 3 characters long
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1" for="body">Content</label>
+        <textarea
+          id="body"
+          class="w-full px-3 py-2 border rounded-md shadow-sm focus:ring-primary focus:border-primary"
+          rows="5"
+          formControlName="body"
+          [class.border-red-500]="postForm.get('body')?.errors && postForm.get('body')?.touched"
+        ></textarea>
+        <div class="mt-1 text-sm text-red-600" *ngIf="postForm.get('body')?.errors?.['required'] && postForm.get('body')?.touched">
+          Content is required
+        </div>
+        <div class="mt-1 text-sm text-red-600" *ngIf="postForm.get('body')?.errors?.['minlength'] && postForm.get('body')?.touched">
+          Body must be at least 10 characters long
+        </div>
+      </div>
+
+      <div class="flex  space-x-3 pt-4 border-t">
+        <app-button
+          variant="ghost"
+          class="border border-gray-300"
+          routerLink="/posts">
+          Cancel
+        </app-button>
+        <app-button
+          [disabled]="postForm.invalid"
+          (buttonClick)="onSubmit()">
+          {{ isEditing ? 'Update Post' : 'Create Post' }}
+        </app-button>
+      </div>
+    </form>
+  </div>
+</div>
