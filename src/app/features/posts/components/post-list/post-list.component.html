@@ -1,0 +1,51 @@
+<div class="bg-background min-h-screen">
+  <app-post-header
+    (toggleView)="toggleView()">
+  </app-post-header>
+  <div class="max-w-5xl bg-white m-4 rounded-lg  mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-2xl font-bold text-gray-900">All Posts</h1>
+      <div class="flex items-center gap-4">
+        <app-button
+          routerLink="/posts/new"
+          variant="primary"
+          class="w-auto">
+          <fa-icon [icon]="faPlus" class="w-4 h-4 sm:w-5 sm:h-5 mr-2"></fa-icon>
+          New post
+        </app-button>
+        <app-button
+          (buttonClick)="toggleView()"
+          variant="secondary"
+          class="bg-white shadow-sm border border-blue-100 hover:bg-blue-50 hover:border-blue-200 transition-all duration-200">
+          @if (viewMode === 'grid') {
+            <fa-icon [icon]="faList"></fa-icon>
+          } @else {
+            <fa-icon [icon]="faTableCells"></fa-icon>
+          }
+        </app-button>
+      </div>
+    </div>
+
+    @if (loading$ | async) {
+      <app-loading-state></app-loading-state>
+    }
+
+    @if (posts$ | async; as posts) {
+      @if (viewMode === 'grid') {
+        <app-post-grid
+          [posts]="posts"
+          (deletePost)="onDelete($event)">
+        </app-post-grid>
+      } @else {
+        <app-post-table
+          [posts]="posts"
+          (deletePost)="onDelete($event)">
+        </app-post-table>
+      }
+
+      @if (posts.length === 0 && !(loading$ | async)) {
+        <app-empty-state></app-empty-state>
+      }
+    }
+  </div>
+</div>
